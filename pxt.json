@@ -9,7 +9,7 @@
     },
     "files": [
         "README.md",
-        "main.ts"
+        "blockytalkybluetooth.ts"
     ],
     "testFiles": [
         "tests.ts"

@@ -13,5 +13,10 @@ blockytalkybluetooth.onMessageReceived("weather", (key: string, value: string) =
 })
 
 input.onButtonPressed(Button.A, () => {
-    blockytalkybluetooth.sendKeyValue("AwesomePerson", "Kari")
+    blockytalkybluetooth.sendKeyValue("AwesomePerson", "Ben")
 })
+
+input.onButtonPressed(Button.B, () => {
+    blockytalkybluetooth.sendKeyValueInt("speed", 16)
+})
+
