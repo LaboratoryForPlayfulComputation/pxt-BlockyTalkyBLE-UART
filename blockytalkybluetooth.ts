@@ -1,40 +1,36 @@
+
 //% color=#0062dB weight=96 icon="\uf294"
 namespace blockytalkybluetooth {
     let delimiter = "^";
     let terminator = "#";
     let handlers: LinkedKeyHandlerList = null;
 
-    // class LinkedKeyHandlerList {
-    //     key: string;
-    //     callback: (value: string) => void;
-    //     next: LinkedKeyHandlerList
-    // }
-
-    export class KeyVal {
-        key: string;
-        value: string;
-    }
-
-    let kvInstance = new KeyVal;
-
     class LinkedKeyHandlerList {
         key: string;
-        callback: (a: KeyVal) => void;
+        callback: (value: ValClass) => void;
         next: LinkedKeyHandlerList
     }
 
+
+
+
+    export class ValClass {
+        value: string;
+    }
+
+    let glblVal = new ValClass;
     /**
-     * Handles incoming messages
-     *
-     * @param key
-     * @param callback 
-     */
+    * Handles incoming messages
+    *
+    * @param key
+    * @param callback 
+    */
     //% mutate=objectdestructuring
     //% mutateText="My Arguments"
     //% mutateDefaults="key,value"
     //% blockId=blockytalkyBLE_on_msg_rcvd
     //% block="on msg received|key %theKey"
-    export function onMessageReceived(key: string, callback: (value: KeyVal) => void) {
+    export function onMessageReceived(key: string, callback: (value: ValClass) => void) {
         //two cases to handle here: 
         //1) we don't have any handlers yet, 
         //2) we are creating the first, or nth, handler for this key. we will allow multiple callbacks for the same key.
@@ -46,24 +42,15 @@ namespace blockytalkybluetooth {
         handlers = newHandler;
     }
     /**
-         * Sends a key value over BLE
-         * @param key key to send
-         * @param value value to send
-         */
+             * Sends a key value over BLE
+             * @param key key to send
+             * @param value value to send
+             */
     //% blockId=blocklyTalkySendKeyValue block="send|key %key|value %value"
     export function sendKeyValue(key: string, value: string) {
         bluetooth.uartWriteString(key + delimiter + value + terminator)
     }
 
-    /**
-   * Sends a key value over BLE
-   * @param key key to send
-   * @param value value to send
-   */
-    //% blockId=blocklyTalkySendKeyValueInt block="send|key %key|intValue %value"
-    export function sendKeyValueInt(key: string, value: number) {
-        bluetooth.uartWriteString(key + delimiter + value.toString() + terminator)
-    }
     let firstOccurenceOfCharacterInString = (charToFind: string, input: string) => {
         for (let index = 0; index < input.length; index++) {
             if (input.charAt(index) == charToFind) {
@@ -90,10 +77,11 @@ namespace blockytalkybluetooth {
             return input.substr(endOfKey2 + 1)
         }
     }
-    /**
+
+/**
          * Handles any incoming message
          */
-    //% blockId=blocklyTalkyHandleIncomingUARTData block="handle incoming data"
+   //% blockId=blocklyTalkyHandleIncomingUARTData block="handle incoming data"
     export function handleIncomingUARTData() {
         let latestMessage = bluetooth.uartReadUntil(terminator)
 
@@ -102,9 +90,8 @@ namespace blockytalkybluetooth {
         //DEBUG LINE ^^^^^^^
 
         let key = extractKey(latestMessage)
-        let value = extractValue(latestMessage)
-        kvInstance.key = key
-        kvInstance.value = value
+        glblVal.value = extractValue(latestMessage)
+
         let handlerToExamine = handlers;
 
         if (handlerToExamine == null) { //empty handler list
@@ -113,7 +100,7 @@ namespace blockytalkybluetooth {
 
         while (handlerToExamine != null) {
             if (handlerToExamine.key == key) {
-                handlerToExamine.callback(kvInstance)
+                handlerToExamine.callback(glblVal)
             }
             handlerToExamine = handlerToExamine.next
         }
@@ -121,3 +108,4 @@ namespace blockytalkybluetooth {
 
     bluetooth.startUartService()
 }
+
