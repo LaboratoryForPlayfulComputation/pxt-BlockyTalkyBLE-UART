@@ -78,10 +78,9 @@ namespace blockytalkybluetooth {
         }
     }
 
-/**
-         * Handles any incoming message
-         */
-   //% blockId=blocklyTalkyHandleIncomingUARTData block="handle incoming data"
+    /**
+     * Handles any incoming message
+     */
     export function handleIncomingUARTData() {
         let latestMessage = bluetooth.uartReadUntil(terminator)
 
@@ -107,5 +106,8 @@ namespace blockytalkybluetooth {
     }
 
     bluetooth.startUartService()
+    basic.forever(() => {
+        blockytalkybluetooth.handleIncomingUARTData()
+    })
 }
 
