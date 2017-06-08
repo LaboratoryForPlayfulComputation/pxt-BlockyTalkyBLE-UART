@@ -1,7 +1,7 @@
 {
-    "name": "blockytalkybluetooth",
+    "name": "blockyTalkyBLE",
     "version": "0.0.1",
-    "description": "",
+    "description": "uses BLE UART to send and receive key value pairs",
     "license": "MIT",
     "dependencies": {
         "core": "*",
@@ -9,7 +9,7 @@
     },
     "files": [
         "README.md",
-        "blockytalkybluetooth.ts"
+        "blockyTalkyBLE.ts"
     ],
     "testFiles": [
         "tests.ts"
