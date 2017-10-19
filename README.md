@@ -1,6 +1,6 @@
-# blockyTalkyBLE
+# BlockyTalkyBLE
 
-PXT Microbit package used to communicate over Bluetooth Low energy UART with a simple read and write of key value pairs. Requires Microbit Bluetooth pakage. Cannot be used with Radio package.
+PXT Microbit package used to communicate over the Bluetooth Low Energy UART with a simple read and write of key value pairs. Requires Microbit Bluetooth pakage. Cannot be used with Radio package.
 
 ## To use:
 * Open editor at https://pxt.microbit.org/
@@ -19,9 +19,9 @@ A couple tips:
 * Use toString() function to convert a number to a string to send.
 * Use parseInt() function to convert strings to numbers if needed when receiving a value expected to be a number.
 
-
-
 ## Supported targets
 * for PXT/microbit
 
-(The metadata above is needed for package search.)
+## Examples
+Please see our getting started guide and videos here: http://www.playfulcomputation.group/blockytalkyble.html
+
