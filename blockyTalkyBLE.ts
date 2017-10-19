@@ -20,7 +20,7 @@ namespace blockyTalkyBLE {
 
     let glblVal = new ValClass;
     /**
-    * Handles incoming messages
+    * Handle incoming messages
     *
     * @param key
     * @param callback 
@@ -42,7 +42,7 @@ namespace blockyTalkyBLE {
         handlers = newHandler;
     }
     /**
-             * Sends a key value over BLE
+             * Send a key and value to the paired device
              * @param key key to send
              * @param value value to send
              */
