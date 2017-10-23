@@ -1,9 +1,9 @@
 # BlockyTalkyBLE
 
-PXT Microbit package used to communicate over the Bluetooth Low Energy UART with a simple read and write of key value pairs. Requires Microbit Bluetooth pakage. Cannot be used with Radio package.
+MakeCode Microbit package used to communicate over the Bluetooth Low Energy UART with a simple read and write of key value pairs. Requires Microbit Bluetooth package. Cannot be used with Radio package.
 
 ## To use:
-* Open editor at https://pxt.microbit.org/
+* Open editor at https://makecode.microbit.org
 * Open Add Pacakage dialog from the setting menu (gear) near top right corner.
 * Type the github package URL: https://github.com/LaboratoryForPlayfulComputation/pxt-blockytalkybluetooth - this will also add the Microsoft's Bluetooth package to your project. If you have conflicting packages (like radio or  neopixel), a dialog box will ask to remove those packages
 
