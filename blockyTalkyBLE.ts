@@ -12,7 +12,7 @@ namespace blockyTalkyBLE {
     }
 
     enum ValueTypeIndicator { String, Number }
-    // String = Puppy, Number = Kitten
+
     export class TypeContainer {
         stringValue: string;
         numberValue: number;
@@ -48,17 +48,6 @@ namespace blockyTalkyBLE {
         handlers = newHandler;
     }
 
-    /**
-             * Sends a key value over BLE
-             * @param key key to send
-             * @param value value to send
-             */
-    //% blockId=blockyTalkyBLE_send_key_value block="send|key %key|value %value"
-    export function sendKeyValue(key: string, value: string) {
-        bluetooth.uartWriteString(key + delimiter + value + terminator)
-    }
-
-    // TODO : [AZ] what is the syntax for these annotation things?
     //% blockId=blockyTalkyBLE_send_string_key_value block="send string|key %key|value %value"
     export function sendMessageWithStringValue(key: string, value: string): void {
         sendRawMessage(key, ValueTypeIndicator.String, value)
@@ -145,7 +134,10 @@ namespace blockyTalkyBLE {
                 return "!"
         }
     }
-    // it seems like we should be able to simplify this into the functionality of enum
+
+    /**
+     * Get enum representation of string.
+     */
     function getValueTypeIndicatorForString(typeString: string) {
         switch (typeString) {
             case "S":
@@ -164,12 +156,10 @@ namespace blockyTalkyBLE {
         let latestMessage = bluetooth.uartReadUntil(terminator)
 
         serial.writeLine(latestMessage)
-        //DEBUG LINE vvvvvvv
-        //basic.showString(latestMessage)
-        //DEBUG LINE ^^^^^^^
+
         let t = getValueTypeIndicatorForString(extractType(latestMessage))
         serial.writeLine(getStringForValueTypeIndicator(t))
-        // don't forget to fix this to make it backwards compatible
+
         let key = extractKey(latestMessage)
         serial.writeLine(key)
         let val = extractValue(latestMessage)
@@ -188,16 +178,12 @@ namespace blockyTalkyBLE {
         if (handlerToExamine == null) { //empty handler list
             basic.showString("nohandler")
         }
-        // [AZ] how to add type to the signature of the callback
+
         while (handlerToExamine != null) {
-            serial.writeLine("handler.key: " + handlerToExamine.key + " = key: " + key)
-            serial.writeLine("handler.type: " + handlerToExamine.type + " = t: " + t)
-            if (handlerToExamine.key == key && handlerToExamine.type == t) { // [AZ] do we need to check if handlerToExamine.type = type (for now, yes)
+            if (handlerToExamine.key == key && handlerToExamine.type == t) {
                 handlerToExamine.callback(messageContainer)
-                serial.writeLine("In here.")
             }
             handlerToExamine = handlerToExamine.next
-            serial.writeLine("again")
         }
     }
 

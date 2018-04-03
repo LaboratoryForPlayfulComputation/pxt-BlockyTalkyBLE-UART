@@ -6,7 +6,7 @@ input.onButtonPressed(Button.B, () => {
         # . . . .
         # . . . .
         `)
-    blockyTalkyBLE.sendKeyValue("Button", "B")
+    blockyTalkyBLE.sendMessageWithStringValue("Button", "B")
 })
 input.onButtonPressed(Button.A, () => {
     basic.showLeds(`
@@ -16,10 +16,14 @@ input.onButtonPressed(Button.A, () => {
         # . . . .
         # . . . .
         `)
-    blockyTalkyBLE.sendKeyValue("accel", "123")
+    blockyTalkyBLE.sendMessageWithNumberValue("accel", 123)
 })
-blockyTalkyBLE.onMessageReceived("show",  ({ value }) =>  {
-    basic.showString(value)
+blockyTalkyBLE.onStringReceived("show",  ({ stringValue }) =>  {
+    basic.showString(stringValue)
+})
+
+blockyTalkyBLE.onNumberReceived("show",  ({ numberValue }) =>  {
+    basic.showNumber(numberValue)
 })
 bluetooth.onBluetoothConnected(() => {
     basic.showString("c")
