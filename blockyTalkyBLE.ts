@@ -63,62 +63,21 @@ namespace blockyTalkyBLE {
         bluetooth.uartWriteString(indicatorAsString + delimiter + key + delimiter + value + terminator)
     }
 
-    let firstOccurenceOfCharacterInString = (charToFind: string, input: string) => {
-        for (let index = 0; index < input.length; index++) {
-            if (input.charAt(index) == charToFind) {
-                return index
-            }
-        }
-        return - 1
-    }
+    let splitString = (splitOnChar: string, input: string) => {
+      let result:string[] = []
+      let count = 0
+      let startIndex = 0
+      for (let index = 0; index < input.length; index++) {
+          if (input.charAt(index) == splitOnChar) {
+              result[count] = input.substr(startIndex, index - startIndex)
 
-    let secondOccurrenceOfCharacterInString = (charToFind: string, input: string) => {
-        let firstIndex = 0;
-        for (let index = 0; index < input.length; index++) {
-            if (input.charAt(index) == charToFind) {
-                firstIndex = index
-            }
-        }
-        let newInput = input.substr(firstIndex + 1)
-        for (let index = 0; index < newInput.length; index++) {
-            if (input.charAt(index) == charToFind) {
-                return index
-            }
-        }
-        return 0
-    }
+              startIndex = index + 1
+              count = count + 1
+          }
+      }
+      result[count] = input.substr(startIndex, input.length - startIndex)
 
-    let extractType = (input: string) => {
-        let endOfType = firstOccurenceOfCharacterInString(delimiter, input)
-        if (endOfType == -1) {
-            return "MISSING DELIMITER"
-        } else {
-            return input.substr(0, endOfType)
-        }
-    }
-
-    let extractKey = (input: string) => {
-        let beginningOfKey = firstOccurenceOfCharacterInString(delimiter, input)
-        let endOfKey = firstOccurenceOfCharacterInString(delimiter, input.substr(beginningOfKey + 1))
-        if (endOfKey == -1) {
-            return "MISSING DELIMITER"
-        } else {
-            return input.substr(beginningOfKey + 1, endOfKey)
-        }
-    }
-
-    let extractValue = (input: string) => {
-        let endOfKey = firstOccurenceOfCharacterInString(delimiter, input)
-        if (endOfKey == -1) {
-            return "MISSING DELIMITER"
-        } else {
-            let s = input.substr(endOfKey + 1)
-            serial.writeLine("s: " + s)
-            let endOfKey2 = firstOccurenceOfCharacterInString(delimiter, s)
-            serial.writeLine("eok2: " + endOfKey2)
-            serial.writeLine("input: " + input)
-            return input.substr(endOfKey2 + endOfKey + 2) // + 1 for each string
-        }
+      return result;
     }
 
     /**
@@ -154,20 +113,15 @@ namespace blockyTalkyBLE {
      */
     export function handleIncomingUARTData() {
         let latestMessage = bluetooth.uartReadUntil(terminator)
+        let messageArray = splitString(delimiter, latestMessage)
 
-        serial.writeLine(latestMessage)
+        let type = getValueTypeIndicatorForString(messageArray[0])
+        let key = messageArray[1]
+        let val = messageArray[2]
 
-        let t = getValueTypeIndicatorForString(extractType(latestMessage))
-        serial.writeLine(getStringForValueTypeIndicator(t))
-
-        let key = extractKey(latestMessage)
-        serial.writeLine(key)
-        let val = extractValue(latestMessage)
-        serial.writeLine(val)
-
-        if (t === ValueTypeIndicator.Number) {
+        if (type === ValueTypeIndicator.Number) {
             messageContainer.numberValue = parseInt(val)
-        } else if (t === ValueTypeIndicator.String) {
+        } else if (type === ValueTypeIndicator.String) {
             messageContainer.stringValue = val
         } else {
             messageContainer.stringValue = val
@@ -180,7 +134,7 @@ namespace blockyTalkyBLE {
         }
 
         while (handlerToExamine != null) {
-            if (handlerToExamine.key == key && handlerToExamine.type == t) {
+            if (handlerToExamine.key == key && handlerToExamine.type == type) {
                 handlerToExamine.callback(messageContainer)
             }
             handlerToExamine = handlerToExamine.next
