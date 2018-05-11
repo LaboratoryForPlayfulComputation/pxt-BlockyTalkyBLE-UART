@@ -1,6 +1,6 @@
 {
     "name": "blockyTalkyBLE",
-    "version": "0.0.6",
+    "version": "0.0.7",
     "description": "uses BLE UART to send and receive key value pairs",
     "license": "MIT",
     "dependencies": {
